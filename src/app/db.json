@@ -1,0 +1,31 @@
+{
+"Entities" :  [
+    {
+      "id": "1",
+      "entity": {
+        "id": "1",
+        "position":
+        {
+            "x": 1319975.3486759863,
+            "y": -4926215.065997225,
+            "z": 3817393.160348165
+        }
+        
+      },
+      "actionType": "ActionType.ADD_UPDATE"
+    },
+    {
+      "id": "2", 
+      "entity": {
+        "id": "2",
+        "position": {
+            "x": 1284603.6423083744,
+            "y": -4794206.060682891,
+            "z": 3992317.0227517267
+        }
+        
+      },
+      "actionType": "ActionType.ADD_UPDATE"
+    }
+  ]
+}
