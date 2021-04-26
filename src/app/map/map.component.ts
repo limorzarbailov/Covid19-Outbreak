@@ -25,8 +25,6 @@ import {MapStabComponent} from 'src/app/map-stab/map-stab.component';
 })
 export class MapComponent implements OnInit {
   public markingFlag:boolean = false; 
-
-
   constructor(viewerConf :ViewerConfiguration) { 
     viewerConf.viewerOptions = {timeline: false, 
                                 homeButton:false,
@@ -42,11 +40,9 @@ export class MapComponent implements OnInit {
                                 sceneModePicker:false,
                                 navigationInstructionsInitiallyVisible:false,
                                 selectionIndicator:false,
-                                shouldAnimate:false
-                      
+                                shouldAnimate:false                     
   };
-  this.markingFlag=false;
-
+    this.markingFlag=false;
   }
 
   ngOnInit(): void {
@@ -55,8 +51,5 @@ export class MapComponent implements OnInit {
 
   mapMarkClicked():void{
     this.markingFlag=true;
- 
-  }
-
-  
+  } 
 }

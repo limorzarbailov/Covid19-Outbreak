@@ -14,32 +14,26 @@ import { MapService } from '../map.service'
   styleUrls: ['./list.component.css'],
 })
 
-export class ListComponent implements OnInit,AfterViewChecked {
-  
-  public newMapEntitiesList: Observable<IEntity[]> = new Observable<IEntity[]>();
-  
-  public mapEntities: Observable<IMapEntity[]> = new Observable<IMapEntity[]>()
-
-  constructor(private _store: Store<{storeCoronaLocation: any}>, private _mapService: MapService,
+export class ListComponent implements OnInit,AfterViewChecked {  
+  public _newMapEntitiesList: Observable<IEntity[]> = new Observable<IEntity[]>();
+  public _mapEntities: Observable<IMapEntity[]> = new Observable<IMapEntity[]>()
+  constructor(private _store: Store<{storeCoronaLocation: any}>,
+    private _mapService: MapService,
     private _changeDetector : ChangeDetectorRef) { 
   }
 
   ngOnInit(): void {
     let counter=0;
-    this._store.select(selectCurrentItems).subscribe(data=> this.newMapEntitiesList= of(data));
+    this._store.select(selectCurrentItems).subscribe(data=> this._newMapEntitiesList= of(data));
     this._store.select(selectMapEntitiesList).subscribe(data=>{
-      this.mapEntities=of(data.filter(item=>item.entity.saved==true))
-     
-     })   
-     
+      this._mapEntities=of(data.filter(item=>item.entity.saved==true))
+     })       
   }
   ngAfterViewChecked():void{
     this._changeDetector.detectChanges();
   }
 
   onClickCancel(entity: IEntity):void{
-    let array: IEntity[]=[];
-    
     let entityTmp: IMapEntity = {
       id:entity.id,
       entity:{
@@ -47,16 +41,14 @@ export class ListComponent implements OnInit,AfterViewChecked {
         id: entity.id,
         saved: false
       },
-      actionType: ActionType.ADD_UPDATE
-    
+      actionType: ActionType.ADD_UPDATE 
     }
-    this._store.dispatch(coronaLocationsActions.REMOVE_MAP_ENTITY({entityToRemove: entityTmp}));
-    
+    this._store.dispatch(coronaLocationsActions.REMOVE_MAP_ENTITY({entityToRemove: entityTmp}));   
   }
+
   onClickSave():void{
-    let message= this._mapService.addMapEntities(this.newMapEntitiesList);
-    message.then(res=>alert(res))  
-    
+    let message= this._mapService.addMapEntities(this._newMapEntitiesList);
+    message.then(res=>alert(res))     
   }
 
   flyToThePosition(entity:IEntity):void{
@@ -65,5 +57,4 @@ export class ListComponent implements OnInit,AfterViewChecked {
     let lat = Cesium.Math.toDegrees(carto.latitude);
     this._mapService.flyToThePosition(lon,lat);     
   }
-
 }

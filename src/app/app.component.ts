@@ -7,12 +7,8 @@ import { AcEntity, CesiumEvent, CesiumEventModifier, EventRegistrationInput, Map
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'TrainingOfek';
-  
-  
+  title = 'TrainingOfek'; 
   constructor(){
     
   }
-  
-
 }

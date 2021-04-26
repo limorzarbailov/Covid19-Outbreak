@@ -53,7 +53,7 @@ APP.use(function (req, res, next) {
     next();
 });
 APP.use('/graphql', index_js_1.graphqlHTTP({
-    schema: graphql_1.buildSchema("\n    type Entity{\n      position: String\n      saved: Boolean\n    }\n    input EntityInput{\n      position: String\n      saved: Boolean\n    }\n\n    type MapEntity{\n      _id: ID\n      entity: Entity\n      actionType: Int\n    }\n\n    input MapEntityInput{\n      entity: EntityInput\n      actionType: Int\n    }\n  \n  \n    type RootQuery{\n      allMapEntities: [MapEntity]\n     \n    }\n\n    type RootMutation{  \n      createMapEntities(mapEntityInput: [MapEntityInput]):String\n\n    }\n\n    schema{\n      query: RootQuery\n      mutation: RootMutation\n      \n    }\n   \n    \n\n  "),
+    schema: graphql_1.buildSchema("\n    type Entity{\n      position: String\n      saved: Boolean\n    }\n    input EntityInput{\n      position: String\n      saved: Boolean\n    }\n\n    type MapEntity{\n      _id: ID\n      entity: Entity\n      actionType: Int\n    }\n\n    input MapEntityInput{\n      entity: EntityInput\n      actionType: Int\n    }\n  \n  \n    type RootQuery{\n      allMapEntities: [MapEntity]\n     \n    }\n\n    type RootMutation{  \n      createMapEntities(mapEntityInput: [MapEntityInput]):String\n    }\n\n    schema{\n      query: RootQuery\n      mutation: RootMutation     \n    }\n  "),
     rootValue: {
         allMapEntities: function () { return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {

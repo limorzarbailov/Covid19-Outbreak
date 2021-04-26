@@ -21,24 +21,17 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     MapComponent,
-    MapStabComponent,
-
-    
-    ListComponent,
-
-    
+    MapStabComponent,  
+    ListComponent,   
     DialogContentExampleDialogComponent
   ],
   imports: [
-
     BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     ScrollingModule,
     AngularCesiumModule.forRoot(),
-    AngularCesiumWidgetsModule,
-   
-    
+    AngularCesiumWidgetsModule,   
     MatDialogModule,
     HttpClientModule,
     StoreModule.forRoot({
