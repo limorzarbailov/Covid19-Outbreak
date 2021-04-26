@@ -4,32 +4,25 @@ import * as coronaLocationsActions from '../../app/store/coronaLocations.action'
 import { selectMapEntitiesList } from '../store/coronaLocations.selector'
 import { selectCurrentItems } from '../store/coronaLocations.selector'
 import { MapService } from '../map.service'
-import { AcEntity,
-  AcLayerComponent,
-  AcNotification,
+import { 
   ActionType,
-  CameraService,
-  Cartesian2,
-  CesiumEvent,CesiumEventModifier,
+  CesiumEvent,
   CesiumService,
-  CoordinateConverter,
   EventRegistrationInput,
   MapEventsManagerService,
-  MapsManagerService,
   PickOptions } from 'angular-cesium';
-import { from, identity, interval, Observable, of } from 'rxjs';
-import { IEntity } from '../entity';
-import { MemoizedSelector, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { IMapEntity } from '../mapEntity';
 
-import {MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import {MatDialog } from '@angular/material/dialog';
 import { DialogContentExampleDialogComponent } from "../dialog-content-example-dialog/dialog-content-example-dialog.component"
 @Component({
   selector: 'app-map-stab',
   templateUrl: './map-stab.component.html',
   styleUrls: ['./map-stab.component.css']
 })
-export class MapStabComponent implements OnInit {
+export class MapStabComponent {
   private _viewer = this._cesiumService.getViewer();
   private _mapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
   
@@ -92,9 +85,6 @@ export class MapStabComponent implements OnInit {
 
       }
     });
-  }
-  ngOnInit(): void {
-   // this._mapEntities=new Observable<IMapEntity>;
   }
 
   get mapEntities(): Observable<IMapEntity>{

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AcEntity, CesiumEvent, CesiumEventModifier, EventRegistrationInput, MapEventsManagerService, PickOptions } from 'angular-cesium';
 
 @Component({
   selector: 'app-root',

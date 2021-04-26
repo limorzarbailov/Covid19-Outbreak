@@ -1,22 +1,6 @@
-import { style } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
-import { AcEntity,
-  AcLayerComponent,
-  AcNotification,
-  ActionType,
-  CameraService,
-  CesiumEvent,
-  CesiumEventModifier,
-  CesiumService,
-  CoordinateConverter,
-  EventRegistrationInput,
-  MapEventsManagerService,
-  MapsManagerService,
-  PickOptions, 
-  ViewerConfiguration} from 'angular-cesium';
-import { LayerService } from 'angular-cesium/lib/angular-cesium/services/layer-service/layer-service.service.d';
-import { CesiumEventBuilder } from 'angular-cesium/lib/angular-cesium/services/map-events-mananger/cesium-event-builder';
-import {MapStabComponent} from 'src/app/map-stab/map-stab.component';
+import { Component } from '@angular/core';
+import { ViewerConfiguration} from 'angular-cesium';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',

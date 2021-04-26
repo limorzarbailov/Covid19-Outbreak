@@ -1,7 +1,7 @@
-import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {  AfterViewChecked,  ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { map, mergeAll } from 'rxjs/operators';
+
 import { IEntity } from '../entity';
 import {  selectCurrentItems, selectMapEntitiesList } from '../store/coronaLocations.selector';
 import * as coronaLocationsActions from '../store/coronaLocations.action';
@@ -34,7 +34,6 @@ export class ListComponent implements OnInit,AfterViewChecked {
     this._mapEntities=mapEntities;
   }
   ngOnInit(): void {
-    let counter=0;
     this._store.select(selectCurrentItems).subscribe(data=> this.newMapEntitiesList=(of(data)));
     this._store.select(selectMapEntitiesList).subscribe(data=>{
       this.mapEntities=(of(data.filter(item=>item.entity.saved==true)))
