@@ -23,10 +23,10 @@ import {MapStabComponent} from 'src/app/map-stab/map-stab.component';
   styleUrls: ['./map.component.css'],
   providers: [ViewerConfiguration]
 })
-export class MapComponent implements OnInit {
-  public markingFlag:boolean = false; 
-  constructor(viewerConf :ViewerConfiguration) { 
-    viewerConf.viewerOptions = {timeline: false, 
+export class MapComponent {
+  private _markingFlag:boolean = false; 
+  constructor(_viewerConf :ViewerConfiguration) { 
+    _viewerConf.viewerOptions = {timeline: false, 
                                 homeButton:false,
                                 infoBox:false,
                                 baseLayerPicker:false,
@@ -45,11 +45,14 @@ export class MapComponent implements OnInit {
     this.markingFlag=false;
   }
 
-  ngOnInit(): void {
-    
+  get markingFlag(): boolean{
+    return this._markingFlag;
+  }
+  set markingFlag(markingFlag:boolean){
+    this._markingFlag=markingFlag;
   }
 
   mapMarkClicked():void{
-    this.markingFlag=true;
+    this.markingFlag=(true);
   } 
 }

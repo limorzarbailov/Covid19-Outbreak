@@ -30,9 +30,10 @@ import { DialogContentExampleDialogComponent } from "../dialog-content-example-d
   styleUrls: ['./map-stab.component.css']
 })
 export class MapStabComponent implements OnInit {
-  public viewer = this._cesiumService.getViewer();
-  public mapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
-  public counterForEntityId: number = 1;
+  private _viewer = this._cesiumService.getViewer();
+  private _mapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
+  
+  private _counterForEntityId: number=0;
   @Input()
   markingFlag!:boolean;
 
@@ -42,7 +43,7 @@ export class MapStabComponent implements OnInit {
     private _mapService: MapService,
     private _cesiumService: CesiumService,
     private _store: Store<{storeCoronaLocation: any}>) { 
-      this.counterForEntityId = 0;  
+  
       const EVENT_REGISTRATION: EventRegistrationInput = {
         event: CesiumEvent.LEFT_CLICK, 
         priority: 0, 
@@ -55,16 +56,19 @@ export class MapStabComponent implements OnInit {
         entitiesInJson=(JSON.parse(JSON.stringify(res))?.data?.allMapEntities)
         entities= this._mapService.loadEntities(entitiesInJson)
         this._store.dispatch(coronaLocationsActions.LOAD_MAP_ENTITIES({mapEntities: entities}));
+        
 
       })
-      this.mapEntities = this._store.select(selectMapEntitiesList).pipe(mergeAll());      
-      this.viewer._cesiumWidget._creditContainer.style.display = "none";
+      this.mapEntities=(this._store.select(selectMapEntitiesList).pipe(mergeAll())); 
+      
+      this.mapEntities.subscribe(x=>console.log(x));
+      this._viewer._cesiumWidget._creditContainer.style.display = "none";
       const CLICK_EVENT = this._eventManager.register(EVENT_REGISTRATION);
       CLICK_EVENT.subscribe((result)=>{    
         if(this.markingFlag==true){
           const POS = result.movement.endPosition;
-          let ellipsoid = this.viewer.scene.globe.ellipsoid;     
-          let cartesian = this.viewer.camera.pickEllipsoid(POS, ellipsoid);       
+          let ellipsoid = this._viewer.scene.globe.ellipsoid;     
+          let cartesian = this._viewer.camera.pickEllipsoid(POS, ellipsoid);       
           if (cartesian) {     
             let cartographic = ellipsoid.cartesianToCartographic(cartesian);      
             let longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(15);       
@@ -79,17 +83,30 @@ export class MapStabComponent implements OnInit {
               },
               actionType: ActionType.ADD_UPDATE
             }
-            this.counterForEntityId++;       
+            this.counterForEntityId=(this.counterForEntityId+1);       
             this._store.dispatch(coronaLocationsActions.ADD_MAP_ENTITY({entityToAdd: newEntity}));        
           }
       }
       else{  
         this.dialog.open(DialogContentExampleDialogComponent);  
-        console.log("checking") 
+
       }
     });
   }
-  ngOnInit(){ 
-  
+  ngOnInit(): void {
+   // this._mapEntities=new Observable<IMapEntity>;
+  }
+
+  get mapEntities(): Observable<IMapEntity>{
+    return this._mapEntities;
+  }
+  set mapEntities(mapEntities: Observable<IMapEntity>){
+    this._mapEntities=mapEntities;
+  }
+  get counterForEntityId(): number{
+    return this._counterForEntityId;
+  }
+  set counterForEntityId(counterForEntityId: number){
+    this._counterForEntityId=counterForEntityId;
   }
 }
