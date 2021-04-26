@@ -42,69 +42,53 @@ export class MapStabComponent implements OnInit {
     private _mapService: MapService,
     private _cesiumService: CesiumService,
     private _store: Store<{storeCoronaLocation: any}>) { 
-    this.counterForEntityId = 0;  
-    const EVENT_REGISTRATION: EventRegistrationInput = {
-      event: CesiumEvent.LEFT_CLICK, 
-      priority: 0, 
-      pick: PickOptions.PICK_ONE 
-    };
-    let x= this._mapService.getAllMapEntities();
-    let entitiesInJson;
-    let entities:IMapEntity[] =[]
-    x.subscribe(y=>{
-      entitiesInJson=(JSON.parse(JSON.stringify(y))?.data?.allMapEntities)
-      entities= this._mapService.loadEntities(entitiesInJson)
-      this._store.dispatch(coronaLocationsActions.LOAD_MAP_ENTITIES({mapEntities: entities}));
+      this.counterForEntityId = 0;  
+      const EVENT_REGISTRATION: EventRegistrationInput = {
+        event: CesiumEvent.LEFT_CLICK, 
+        priority: 0, 
+        pick: PickOptions.PICK_ONE 
+      };
+      let x= this._mapService.getAllMapEntities();
+      let entitiesInJson;
+      let entities:IMapEntity[] =[]
+      x.subscribe(res=>{
+        entitiesInJson=(JSON.parse(JSON.stringify(res))?.data?.allMapEntities)
+        entities= this._mapService.loadEntities(entitiesInJson)
+        this._store.dispatch(coronaLocationsActions.LOAD_MAP_ENTITIES({mapEntities: entities}));
 
-    })
+      })
       this.mapEntities = this._store.select(selectMapEntitiesList).pipe(mergeAll());      
-
-    
-   
-    
-    this.viewer._cesiumWidget._creditContainer.style.display = "none";
-    const CLICK_EVENT = this._eventManager.register(EVENT_REGISTRATION);
-    CLICK_EVENT.subscribe((result)=>{
-     
-      if(this.markingFlag==true){
-     
-      const POS = result.movement.endPosition;
-     
-      let ellipsoid = this.viewer.scene.globe.ellipsoid;     
-      let cartesian = this.viewer.camera.pickEllipsoid(POS, ellipsoid);
-        
-      if (cartesian) {     
-        let cartographic = ellipsoid.cartesianToCartographic(cartesian);
-        
-        let longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(15);
-        
-        let latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(15);
-        
-        let height = Cesium.Math.toDegrees(cartographic.height).toFixed(15);   
-
-        let newEntity: IMapEntity = {
-          id:(this.counterForEntityId+1).toString(),
-          entity:{
-            position: new Cesium.Cartesian3.fromDegrees(longitudeString, latitudeString,height),
-            id: (this.counterForEntityId+1).toString(),
-            saved:false
-          },
-          actionType: ActionType.ADD_UPDATE
-        }
-        this.counterForEntityId++;
-        
-        
-        this._store.dispatch(coronaLocationsActions.ADD_MAP_ENTITY({entityToAdd: newEntity})); 
-       
-        
-        
-     
+      this.viewer._cesiumWidget._creditContainer.style.display = "none";
+      const CLICK_EVENT = this._eventManager.register(EVENT_REGISTRATION);
+      CLICK_EVENT.subscribe((result)=>{    
+        if(this.markingFlag==true){
+          const POS = result.movement.endPosition;
+          let ellipsoid = this.viewer.scene.globe.ellipsoid;     
+          let cartesian = this.viewer.camera.pickEllipsoid(POS, ellipsoid);       
+          if (cartesian) {     
+            let cartographic = ellipsoid.cartesianToCartographic(cartesian);      
+            let longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(15);       
+            let latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(15);        
+            let height = Cesium.Math.toDegrees(cartographic.height).toFixed(15);   
+            let newEntity: IMapEntity = {
+              id:(this.counterForEntityId+1).toString(),
+              entity:{
+                position: new Cesium.Cartesian3.fromDegrees(longitudeString, latitudeString,height),
+                id: (this.counterForEntityId+1).toString(),
+                saved:false
+              },
+              actionType: ActionType.ADD_UPDATE
+            }
+            this.counterForEntityId++;       
+            this._store.dispatch(coronaLocationsActions.ADD_MAP_ENTITY({entityToAdd: newEntity}));        
+          }
       }
+      else{  
+        this.dialog.open(DialogContentExampleDialogComponent);   
+      }
+    });
   }
-else{  
-    this.dialog.open(DialogContentExampleDialogComponent);   
-}});
-  }
-   ngOnInit(){ 
+  ngOnInit(){ 
+  
   }
 }
