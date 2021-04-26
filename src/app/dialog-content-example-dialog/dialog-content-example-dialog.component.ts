@@ -7,15 +7,13 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './dialog-content-example-dialog.component.html',
   styleUrls: ['./dialog-content-example-dialog.component.css']
 })
-export class DialogContentExampleDialogComponent implements OnInit {
+export class DialogContentExampleDialogComponent {
 
   constructor(private _dialogRef: MatDialogRef<DialogContentExampleDialogComponent>) { }
   @HostListener('window:keyup.esc') onKeyUp() {
     this._dialogRef.close();
   }
-  ngOnInit(): void {
-    
-  }
+
   
 
 }

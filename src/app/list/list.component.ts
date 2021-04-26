@@ -15,25 +15,36 @@ import { MapService } from '../map.service'
 })
 
 export class ListComponent implements OnInit,AfterViewChecked {  
-  public _newMapEntitiesList: Observable<IEntity[]> = new Observable<IEntity[]>();
-  public _mapEntities: Observable<IMapEntity[]> = new Observable<IMapEntity[]>()
+  private _newMapEntitiesList: Observable<IEntity[]> = new Observable<IEntity[]>();
+  private _mapEntities: Observable<IMapEntity[]> = new Observable<IMapEntity[]>()
   constructor(private _store: Store<{storeCoronaLocation: any}>,
     private _mapService: MapService,
-    private _changeDetector : ChangeDetectorRef) { 
+    private _changeDetector: ChangeDetectorRef) { 
   }
-
+  get newMapEntitiesList(): Observable<IEntity[]>{
+    return this._newMapEntitiesList;
+  }
+  get mapEntities(): Observable<IMapEntity[]>{
+    return this._mapEntities;
+  }
+  set newMapEntitiesList(newMapEntitiesList: Observable<IEntity[]>){
+    this._newMapEntitiesList=newMapEntitiesList;
+  }
+  set mapEntities(mapEntities: Observable<IMapEntity[]>){
+    this._mapEntities=mapEntities;
+  }
   ngOnInit(): void {
     let counter=0;
-    this._store.select(selectCurrentItems).subscribe(data=> this._newMapEntitiesList= of(data));
+    this._store.select(selectCurrentItems).subscribe(data=> this.newMapEntitiesList=(of(data)));
     this._store.select(selectMapEntitiesList).subscribe(data=>{
-      this._mapEntities=of(data.filter(item=>item.entity.saved==true))
+      this.mapEntities=(of(data.filter(item=>item.entity.saved==true)))
      })       
   }
-  ngAfterViewChecked():void{
+  ngAfterViewChecked(): void{
     this._changeDetector.detectChanges();
   }
 
-  onClickCancel(entity: IEntity):void{
+  onClickCancel(entity: IEntity): void{
     let entityTmp: IMapEntity = {
       id:entity.id,
       entity:{
@@ -46,15 +57,16 @@ export class ListComponent implements OnInit,AfterViewChecked {
     this._store.dispatch(coronaLocationsActions.REMOVE_MAP_ENTITY({entityToRemove: entityTmp}));   
   }
 
-  onClickSave():void{
+  onClickSave(): void{
     let message= this._mapService.addMapEntities(this._newMapEntitiesList);
     message.then(res=>alert(res))     
   }
 
-  flyToThePosition(entity:IEntity):void{
+  flyToThePosition(entity: IEntity): void{
     let carto  = Cesium.Ellipsoid.WGS84.cartesianToCartographic(entity.position);       
     let lon = Cesium.Math.toDegrees(carto.longitude);
     let lat = Cesium.Math.toDegrees(carto.latitude);
     this._mapService.flyToThePosition(lon,lat);     
   }
+
 }
