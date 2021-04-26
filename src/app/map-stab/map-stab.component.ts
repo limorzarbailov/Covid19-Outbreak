@@ -84,7 +84,8 @@ export class MapStabComponent implements OnInit {
           }
       }
       else{  
-        this.dialog.open(DialogContentExampleDialogComponent);   
+        this.dialog.open(DialogContentExampleDialogComponent);  
+        console.log("checking") 
       }
     });
   }
