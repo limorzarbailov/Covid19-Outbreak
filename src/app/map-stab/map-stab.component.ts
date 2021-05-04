@@ -82,7 +82,7 @@ export class MapStabComponent {
       }
       else{  
         this.dialog.open(DialogContentExampleDialogComponent);  
-
+        console.log("ll");
       }
     });
   }
