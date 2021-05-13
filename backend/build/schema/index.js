@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.schema = void 0;
 var graphql_1 = require("graphql");
 var entity_1 = require("../types/entity");

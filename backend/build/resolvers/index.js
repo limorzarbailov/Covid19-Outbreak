@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolver = void 0;
 var mapEntities_1 = require("../model/mapEntities");
 exports.resolver = {
@@ -52,7 +52,7 @@ exports.resolver = {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, mapEntities_1.MAP_ENTITIES.insertMany(args.mapEntityInput).then(function (result) {
                         return "Saved in the DB";
-                    })["catch"](function (err) {
+                    }).catch(function (err) {
                         throw err;
                     })];
                 case 1: return [2 /*return*/, _a.sent()];

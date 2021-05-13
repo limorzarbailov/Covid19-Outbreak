@@ -1,6 +1,6 @@
-import * as express  from "express";
+import express from "express";
 import { graphqlHTTP } from "./node_modules/express-graphql/index.js";
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { schema } from './schema/index'
 import { resolver } from './resolvers/index'
 
