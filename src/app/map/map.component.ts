@@ -36,7 +36,7 @@ export class MapComponent {
     this._markingFlag=markingFlag;
   }
 
-  mapMarkClicked():void{
+  public mapMarkClicked():void{
     this.markingFlag=(true);
   } 
 }

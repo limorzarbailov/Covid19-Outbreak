@@ -50,4 +50,11 @@ ac-map{
   margin-bottom: 100px;
   margin-top: -10px;
 }
+.width{
+  width: 100%;
+}
+.widthAndHeight{
+  width: 100%;
+  height: 100%
+}
 

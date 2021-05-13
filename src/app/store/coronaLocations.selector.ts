@@ -6,9 +6,9 @@ export const selectMapEntitiesList = createSelector(
   (state) => state.mapEntities
 );
 
-export const selectCurrentItems = createSelector(
+export const selectAllItems = createSelector(
     (state: {storeCoronaLocation:State} ) => state.storeCoronaLocation,
-  (state) => state.newMapEntities
+  (state) => state.newEntities
 );
 
 

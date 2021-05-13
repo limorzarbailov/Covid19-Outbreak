@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, Output, ViewRef } from '@angular/core';
-import { map, mergeAll } from 'rxjs/operators';
+import { Component, Input } from '@angular/core';
+import { mergeAll } from 'rxjs/operators';
 import * as coronaLocationsActions from '../../app/store/coronaLocations.action';
-import { selectMapEntitiesList } from '../store/coronaLocations.selector'
-import { selectCurrentItems } from '../store/coronaLocations.selector'
+import { selectAllItems, selectMapEntitiesList } from '../store/coronaLocations.selector'
 import { MapService } from '../map.service'
 import { 
   ActionType,
@@ -11,12 +10,13 @@ import {
   EventRegistrationInput,
   MapEventsManagerService,
   PickOptions } from 'angular-cesium';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapEntity } from '../mapEntity';
-
+import { fixedDegrees } from '../../environments/environment';
 import {MatDialog } from '@angular/material/dialog';
 import { DialogContentExampleDialogComponent } from "../dialog-content-example-dialog/dialog-content-example-dialog.component"
+
 @Component({
   selector: 'app-map-stab',
   templateUrl: './map-stab.component.html',
@@ -25,7 +25,7 @@ import { DialogContentExampleDialogComponent } from "../dialog-content-example-d
 export class MapStabComponent {
   private _viewer = this._cesiumService.getViewer();
   private _mapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
-  
+  public _newMapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
   private _counterForEntityId: number=0;
   @Input()
   markingFlag!:boolean;
@@ -42,31 +42,29 @@ export class MapStabComponent {
         priority: 0, 
         pick: PickOptions.PICK_ONE 
       };
-      let x= this._mapService.getAllMapEntities();
-      let entitiesInJson;
+      let loadEntities: Observable<Object> = this._mapService.getAllMapEntities();
+      let entitiesInJson: any;
       let entities:IMapEntity[] =[]
-      x.subscribe(res=>{
+      loadEntities.subscribe(res=>{
         entitiesInJson=(JSON.parse(JSON.stringify(res))?.data?.allMapEntities)
-        entities= this._mapService.loadEntities(entitiesInJson)
+        entities = this._mapService.loadEntities(entitiesInJson)
         this._store.dispatch(coronaLocationsActions.LOAD_MAP_ENTITIES({mapEntities: entities}));
         
-
-      })
-      this.mapEntities=(this._store.select(selectMapEntitiesList).pipe(mergeAll())); 
-      
-      this.mapEntities.subscribe(x=>console.log(x));
+      });
+      this.newMapEntities=this._store.select(selectAllItems).pipe(mergeAll());
+      this.mapEntities = (this._store.select(selectMapEntitiesList).pipe(mergeAll())); 
       this._viewer._cesiumWidget._creditContainer.style.display = "none";
       const CLICK_EVENT = this._eventManager.register(EVENT_REGISTRATION);
       CLICK_EVENT.subscribe((result)=>{    
         if(this.markingFlag==true){
-          const POS = result.movement.endPosition;
-          let ellipsoid = this._viewer.scene.globe.ellipsoid;     
-          let cartesian = this._viewer.camera.pickEllipsoid(POS, ellipsoid);       
+          const POS: any = result.movement.endPosition;
+          let ellipsoid: any = this._viewer.scene.globe.ellipsoid;     
+          let cartesian: any = this._viewer.camera.pickEllipsoid(POS, ellipsoid);       
           if (cartesian) {     
-            let cartographic = ellipsoid.cartesianToCartographic(cartesian);      
-            let longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(15);       
-            let latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(15);        
-            let height = Cesium.Math.toDegrees(cartographic.height).toFixed(15);   
+            let cartographic: any = ellipsoid.cartesianToCartographic(cartesian);      
+            let longitudeString: any = Cesium.Math.toDegrees(cartographic.longitude).toFixed(fixedDegrees);       
+            let latitudeString: any = Cesium.Math.toDegrees(cartographic.latitude).toFixed(fixedDegrees);        
+            let height: any = Cesium.Math.toDegrees(cartographic.height).toFixed(fixedDegrees);   
             let newEntity: IMapEntity = {
               id:(this.counterForEntityId+1).toString(),
               entity:{
@@ -76,14 +74,15 @@ export class MapStabComponent {
               },
               actionType: ActionType.ADD_UPDATE
             }
-            this.counterForEntityId=(this.counterForEntityId+1);       
-            this._store.dispatch(coronaLocationsActions.ADD_MAP_ENTITY({entityToAdd: newEntity}));        
+            this.counterForEntityId = (this.counterForEntityId+1);              
+            this._store.dispatch(coronaLocationsActions.ADD_ENTITY({entityToAdd: newEntity}))
           }
       }
+      
       else{  
         this.dialog.open(DialogContentExampleDialogComponent);  
-        console.log("ll");
       }
+      
     });
   }
 
@@ -92,6 +91,12 @@ export class MapStabComponent {
   }
   set mapEntities(mapEntities: Observable<IMapEntity>){
     this._mapEntities=mapEntities;
+  }
+  get newMapEntities(): Observable<IMapEntity>{
+    return this._newMapEntities;
+  }
+  set newMapEntities(newMapEntities: Observable<IMapEntity>){
+    this._newMapEntities=newMapEntities;
   }
   get counterForEntityId(): number{
     return this._counterForEntityId;

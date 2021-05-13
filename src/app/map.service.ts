@@ -1,46 +1,46 @@
-import { Injectable, OnInit } from '@angular/core';
-import { CesiumService, MapsManagerService } from 'angular-cesium';
+import { Injectable } from '@angular/core';
+import { MapsManagerService } from 'angular-cesium';
 
 
 import { IMapEntity } from '../../src/app/mapEntity';
-import { from, Observable, of } from 'rxjs';
-import { IEntity } from './entity';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import * as coronaLocationsActions from '../app/store/coronaLocations.action';
+import { heightFlyToPosition } from '../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  public viewer = this._mapsManagerService.getMap()?.getCesiumViewer();
-  public mapEntities: IMapEntity[]=[];
+  public viewer: any = this._mapsManagerService.getMap()?.getCesiumViewer();
+  
   constructor(private _store: Store<{storeCoronaLocation: any}>,
     private _mapsManagerService: MapsManagerService,
     private _http: HttpClient) {
     
   }
 
-  flyToThePosition(lon:any, lat:any):void{
+  public flyToThePosition(lon:any, lat:any):void{
     this.viewer = this._mapsManagerService.getMap()?.getCesiumViewer();
-    this.viewer?.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(parseInt(lon), parseInt(lat),1000000)});
+    this.viewer?.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(parseInt(lon), parseInt(lat),heightFlyToPosition)});
+    
   }
 
-  getAllMapEntities(): Observable<Object>{
-    let mapEntities3:Observable<Object>=new Observable<Object>();
+  public getAllMapEntities(): Observable<Object>{
+    let mapEntities:Observable<Object>=new Observable<Object>();
     const REQUEST_BODY=  `{
       "query": "query {allMapEntities {_id,entity {position,saved}, actionType}}"
     }`;
-    mapEntities3= this._http.post<Object>("http://localhost:4000/graphql", REQUEST_BODY, { headers: { 'Content-Type': 'application/json' }});
-    return mapEntities3
+    mapEntities= this._http.post<Object>("http://localhost:4000/graphql", REQUEST_BODY, { headers: { 'Content-Type': 'application/json' }});
+    return mapEntities;
   } 
 
-  async addMapEntities(newMapEntitiesList: Observable<IEntity[]>): Promise<string>{
-    let message='';
-    let entities:String="";  
-    newMapEntitiesList.forEach(result=>result.map(entity=>entities+= `{entity:{position:"${entity.position}",saved:true},actionType:0},`
+  public async addMapEntities(newMapEntitiesList: Observable<IMapEntity[]>): Promise<string>{
+    let message: string ='';
+    let entities: string="";  
+    newMapEntitiesList.forEach(result=>result.map(entity=>entities+= `{entity:{position:"${entity.entity.position}",saved:true},actionType:0},`
     ))
-    entities=entities.slice(0,-1); 
+    entities = entities.slice(0,-1); 
     const REQUEST_BODY={
         query: `
           mutation{
@@ -66,8 +66,8 @@ export class MapService {
     return message;
   }
 
-  loadEntities(jsonEntities:any):IMapEntity[]{
-    let entities:IMapEntity[] =[]
+  public loadEntities(jsonEntities:any):IMapEntity[]{
+    let entities: IMapEntity[] =[]
     jsonEntities.forEach((x: any)=>{
       let entity:IMapEntity={
         id: x?._id,
@@ -83,9 +83,9 @@ export class MapService {
     return entities;
   }
 
-  convertToCartecian(position:string):any{
-    let cordinates=position.split(",");
-    let cartecian=new Cesium.Cartesian3(parseFloat(cordinates[0]),parseFloat(cordinates[1]),parseFloat(cordinates[2]))
+  public convertToCartecian(position:string): any{
+    let cordinates: string[] = position.split(",");
+    let cartecian: any = new Cesium.Cartesian3(parseFloat(cordinates[0]),parseFloat(cordinates[1]),parseFloat(cordinates[2]))
     return cartecian;
   }
 }

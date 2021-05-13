@@ -13,7 +13,8 @@
 .bottomright {
    height: 100%;
    width: 25%;
-   overflow:hidden;   
+   overflow:hidden;  
+   background:rgb(220,220,221); 
 }
 
 app-map {
@@ -26,4 +27,10 @@ div>h1{
   margin-left: 43%;
   font-size: larger;
   font-family:'Trebuchet MS', sans-serif;  
+  
+}
+.outerDiv{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
