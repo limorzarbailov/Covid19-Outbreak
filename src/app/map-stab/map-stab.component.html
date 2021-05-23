@@ -1,0 +1,21 @@
+
+
+<ac-layer acFor="let entity of mapEntities" [context]="this" [debug]="true"> 
+    <ac-billboard-desc props="{ position: entity.position,
+        image : imagePath,
+        scale: scale,
+    }">
+    </ac-billboard-desc>
+    
+</ac-layer>
+
+<ac-layer acFor="let entity of newMapEntities" [context]="this" [debug]="true"> 
+    <ac-billboard-desc props="{ position: entity.position,
+        image : imagePath,
+        scale: scale,
+    }">
+    </ac-billboard-desc>
+    
+</ac-layer>
+
+

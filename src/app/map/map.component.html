@@ -1,0 +1,21 @@
+
+<div class="container">
+    <div class="width"><h1>Corona Virus Outbreak Map</h1></div>
+    <div class="widthAndHeight">
+    <ac-map>
+        <div *ngIf = "markingFlag === false">
+            <button class="button" (click) = "mapMarkClicked()">mark places</button>
+        </div> 
+    <app-map-stab
+        [markingFlag] = "markingFlag"
+    ></app-map-stab>      
+    </ac-map>
+</div>
+</div>
+
+
+
+
+
+
+

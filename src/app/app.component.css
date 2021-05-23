@@ -1,0 +1,36 @@
+.container {  
+    display: flex; 
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    position: relative;
+    background-color: #000000;   
+}
+
+.bottomright {
+   height: 100%;
+   width: 25%;
+   overflow:hidden;  
+   background:rgb(220,220,221); 
+}
+
+app-map {
+  height: 100%;
+  width: 75%;
+}
+div>h1{
+  flex-direction: row;
+  height: 6%;
+  margin-left: 43%;
+  font-size: larger;
+  font-family:'Trebuchet MS', sans-serif;  
+  
+}
+.outerDiv{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
