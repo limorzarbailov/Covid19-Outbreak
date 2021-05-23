@@ -4,7 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var index_js_1 = require("./node_modules/express-graphql/index.js");
+var express_graphql_1 = require("express-graphql");
+//"./node_modules/express-graphql/index.js";
 var mongoose_1 = __importDefault(require("mongoose"));
 var index_1 = require("./schema/index");
 var index_2 = require("./resolvers/index");
@@ -19,7 +20,7 @@ APP.use(function (req, res, next) {
     }
     next();
 });
-APP.use('/graphql', index_js_1.graphqlHTTP({
+APP.use('/graphql', express_graphql_1.graphqlHTTP({
     schema: index_1.schema,
     rootValue: index_2.resolver,
     graphiql: true,

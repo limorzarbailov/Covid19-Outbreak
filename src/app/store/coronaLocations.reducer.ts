@@ -69,8 +69,7 @@ export function removeItem(entityToRemove: IMapEntity,entitiesArray:IMapEntity[]
         id: entity.id,
         entity: {
           id: entity.id,
-          position: entity.entity.position,
-          saved: entity.entity.saved
+          position: entity.entity.position
         },
         
         actionType: ActionType.DELETE

@@ -4,11 +4,11 @@
         <p class="pBackground">New Places To Add</p>
         <div class="heightAndWidth">
             <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-            <div class="container" *cdkVirtualFor="let entity of newMapEntitiesList | async">
+            <div class="container" *cdkVirtualFor="let entity of newMapEntitiesList$ | async">
                 <h2>{{entity.entity.position}}</h2>
                 <button (click)="onClickCancel(entity)">cancel</button>
             </div>        
-            <div class="saveButton" *ngIf="(newMapEntitiesList | async)?.length else noLocationFlag">
+            <div class="saveButton" *ngIf="(newMapEntitiesList$ | async)?.length else noLocationFlag">
                 <button (click)="onClickSave()" >save</button>
             </div>
             <div><ng-template #noLocationFlag><h1>No location has been selected yet!</h1></ng-template> </div>

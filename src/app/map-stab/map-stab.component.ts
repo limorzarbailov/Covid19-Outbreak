@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { mergeAll } from 'rxjs/operators';
 import * as coronaLocationsActions from '../../app/store/coronaLocations.action';
 import { selectAllItems, selectMapEntitiesList } from '../store/coronaLocations.selector'
-import { MapService } from '../map.service'
+import { MapService } from '../../services/map.service'
 import { 
   ActionType,
   CesiumEvent,
@@ -13,16 +13,18 @@ import {
 import { Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapEntity } from '../mapEntity';
-import { fixedDegrees } from '../../environments/environment';
-import {MatDialog } from '@angular/material/dialog';
+import { fixedDegrees, imagePath, scale } from '../../environments/environment';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogContentExampleDialogComponent } from "../dialog-content-example-dialog/dialog-content-example-dialog.component"
-
+import { HttpService } from '../../services/http.service'
 @Component({
   selector: 'app-map-stab',
   templateUrl: './map-stab.component.html',
   styleUrls: ['./map-stab.component.css']
 })
 export class MapStabComponent {
+  private _scale!:number;
+  private _imagePath!:string;
   private _viewer = this._cesiumService.getViewer();
   private _mapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
   public _newMapEntities: Observable<IMapEntity> = new Observable<IMapEntity>();
@@ -35,21 +37,23 @@ export class MapStabComponent {
     public dialog: MatDialog,
     private _mapService: MapService,
     private _cesiumService: CesiumService,
+    private _httpService: HttpService,
     private _store: Store<{storeCoronaLocation: any}>) { 
-  
+    
       const EVENT_REGISTRATION: EventRegistrationInput = {
         event: CesiumEvent.LEFT_CLICK, 
         priority: 0, 
         pick: PickOptions.PICK_ONE 
       };
-      let loadEntities: Observable<Object> = this._mapService.getAllMapEntities();
+      this.scale = scale;
+      this.imagePath = imagePath;
+      let loadEntities: Observable<Object> = this._httpService.getAllMapEntities();
       let entitiesInJson: any;
       let entities:IMapEntity[] =[]
       loadEntities.subscribe(res=>{
         entitiesInJson=(JSON.parse(JSON.stringify(res))?.data?.allMapEntities)
         entities = this._mapService.loadEntities(entitiesInJson)
-        this._store.dispatch(coronaLocationsActions.LOAD_MAP_ENTITIES({mapEntities: entities}));
-        
+        this._store.dispatch(coronaLocationsActions.LOAD_MAP_ENTITIES({mapEntities: entities}));       
       });
       this.newMapEntities=this._store.select(selectAllItems).pipe(mergeAll());
       this.mapEntities = (this._store.select(selectMapEntitiesList).pipe(mergeAll())); 
@@ -70,7 +74,6 @@ export class MapStabComponent {
               entity:{
                 position: new Cesium.Cartesian3.fromDegrees(longitudeString, latitudeString,height),
                 id: (this.counterForEntityId+1).toString(),
-                saved:false
               },
               actionType: ActionType.ADD_UPDATE
             }
@@ -92,6 +95,12 @@ export class MapStabComponent {
   set mapEntities(mapEntities: Observable<IMapEntity>){
     this._mapEntities=mapEntities;
   }
+  get scale(): number{
+    return this._scale;
+  }
+  set scale(scale: number){
+    this._scale=scale;
+  }
   get newMapEntities(): Observable<IMapEntity>{
     return this._newMapEntities;
   }
@@ -103,5 +112,11 @@ export class MapStabComponent {
   }
   set counterForEntityId(counterForEntityId: number){
     this._counterForEntityId=counterForEntityId;
+  }
+  get imagePath(): string{
+    return this._imagePath;
+  }
+  set imagePath(imagePath: string){
+    this._imagePath=imagePath;
   }
 }

@@ -2,8 +2,8 @@
 
 <ac-layer acFor="let entity of mapEntities" [context]="this" [debug]="true"> 
     <ac-billboard-desc props="{ position: entity.position,
-        image : '../../assets/RedPinLogo.png',
-        scale: 0.05,
+        image : imagePath,
+        scale: scale,
     }">
     </ac-billboard-desc>
     
@@ -11,8 +11,8 @@
 
 <ac-layer acFor="let entity of newMapEntities" [context]="this" [debug]="true"> 
     <ac-billboard-desc props="{ position: entity.position,
-        image : '../../assets/RedPinLogo.png',
-        scale: 0.05,
+        image : imagePath,
+        scale: scale,
     }">
     </ac-billboard-desc>
     
